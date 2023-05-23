@@ -8,17 +8,23 @@ import androidx.annotation.Nullable;
 
 public class NoteDbHelper extends SQLiteOpenHelper {
 
-    public NoteDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public NoteDbHelper(@Nullable Context context) {
+
+        super(context, NoteDbConstants.DB_NAME, null, NoteDbConstants.DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        db.execSQL(NoteDbConstants.TABLE_STRUCTURE);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        db.execSQL(NoteDbConstants.DROP_TABLE);
+        onCreate(db);
 
     }
 }
