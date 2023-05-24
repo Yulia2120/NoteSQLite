@@ -53,6 +53,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public void updateAdapter(List<String> newList){
         mainArray.clear();
         mainArray.addAll(newList);
-        notifyDataSetChanged();
+       // notifyDataSetChanged();
     }
 }
