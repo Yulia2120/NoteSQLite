@@ -16,7 +16,7 @@ import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private Context context;
-    private List<String> mainArray;
+    private List<ListItem> mainArray;
 
     public NoteAdapter(Context context) {
         this.context = context;
@@ -32,7 +32,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-            holder.setData(mainArray.get(position));
+            holder.setData(mainArray.get(position).getTitle());
     }
 
     @Override
@@ -50,9 +50,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             tvTitle.setText(title);
         }
     }
-    public void updateAdapter(List<String> newList){
+    public void updateAdapter(List<ListItem> newList){
         mainArray.clear();
         mainArray.addAll(newList);
-       // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 }
