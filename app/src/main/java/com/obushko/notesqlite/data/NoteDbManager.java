@@ -20,11 +20,12 @@ public class NoteDbManager {
     public void openDb(){
         db = noteDbHelper.getWritableDatabase();
     }
-    public void insertToDb(String title, String description){
+    public void insertToDb(String title, String description, String uri){
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(NoteDbConstants.COLUMN_NAME_TITLE, title);
         contentValues.put(NoteDbConstants.COLUMN_NAME_DESCRIPTION, description);
+        contentValues.put(NoteDbConstants.COLUMN_NAME_URI, uri);
         db.insert(NoteDbConstants.TABLE_NAME, null, contentValues);
     }
     public List<String> getFromDb(){

@@ -76,7 +76,7 @@
         android:layout_marginBottom="8dp"
         android:gravity="top"
         android:hint="@string/description"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine|textPersonName"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/editTextTitle"
