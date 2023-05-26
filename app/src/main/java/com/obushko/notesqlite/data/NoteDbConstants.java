@@ -8,6 +8,8 @@ public class NoteDbConstants {
     public static final String COLUMN_NAME_URI = "uri";
     public static final String DB_NAME = "note.db";
     public static final int DB_VERSION = 2;
+    public static final String LIST_ITEM_INTENT = "list_item_intent";
+    public static final String EDIT_STATE = "edit_state";
 
     public static final String TABLE_STRUCTURE = "CREATE TABLE IF NOT EXISTS "+
             TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY, " + COLUMN_NAME_TITLE + " TEXT, " +

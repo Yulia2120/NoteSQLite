@@ -30,10 +30,15 @@ public class NoteDbManager {
         contentValues.put(NoteDbConstants.COLUMN_NAME_URI, uri);
         db.insert(NoteDbConstants.TABLE_NAME, null, contentValues);
     }
-    public List<ListItem> getFromDb(){
+    public void deleteFromDb(int id){
+        String selection = NoteDbConstants._ID + "=" + id;
+        db.delete(NoteDbConstants.TABLE_NAME, selection, null);
+    }
+    public List<ListItem> getFromDb(String searchText){
         List<ListItem> tempList = new ArrayList<>();
-        Cursor cursor = db.query(NoteDbConstants.TABLE_NAME, null, null,
-                null, null, null, null);
+        String selection = NoteDbConstants.COLUMN_NAME_TITLE + " like ?";
+        Cursor cursor = db.query(NoteDbConstants.TABLE_NAME, null, selection,
+                new String[]{"%" + searchText + "%"}, null, null, null);
 
         while (cursor.moveToNext()){
 
@@ -42,10 +47,12 @@ public class NoteDbManager {
             String title = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_TITLE));
             String desc = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_DESCRIPTION));
             String uri = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_URI));
+            int _id = cursor.getInt(cursor.getColumnIndexOrThrow(NoteDbConstants._ID));
 
             item.setTitle(title);
             item.setDescription(desc);
             item.setUri(uri);
+            item.setId(_id);
             tempList.add(item);
 
         }

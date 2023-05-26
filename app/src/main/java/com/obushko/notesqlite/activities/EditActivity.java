@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.obushko.notesqlite.R;
+import com.obushko.notesqlite.adapter.ListItem;
+import com.obushko.notesqlite.data.NoteDbConstants;
 import com.obushko.notesqlite.data.NoteDbManager;
 
 public class EditActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class EditActivity extends AppCompatActivity {
     private EditText editTextTitle, editTextDescription;
     private NoteDbManager noteDbManager;
     private String tempUri = "empty";
+    private boolean isEditState = true;
 
     private FloatingActionButton floatingActionButton;
 
@@ -36,6 +39,7 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         init();
+        getNoteIntents();
         noteDbManager.openDb();
 
     }
@@ -109,6 +113,19 @@ public class EditActivity extends AppCompatActivity {
         });
 
 
+    }
+    private void getNoteIntents(){
+
+        Intent intent = getIntent();
+        if(intent != null){
+            ListItem item = (ListItem)intent.getSerializableExtra(NoteDbConstants.LIST_ITEM_INTENT);
+            isEditState = intent.getBooleanExtra(NoteDbConstants.EDIT_STATE, true);
+
+            if(!isEditState){
+                editTextTitle.setText(item.getTitle());
+                editTextDescription.setText(item.getDescription());
+            }
+        }
     }
 
 
