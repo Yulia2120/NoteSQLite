@@ -16,9 +16,14 @@ import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.obushko.notesqlite.R;
 import com.obushko.notesqlite.adapter.NoteAdapter;
+import com.obushko.notesqlite.adapter.NotesListItem;
+import com.obushko.notesqlite.data.AppExecuter;
 import com.obushko.notesqlite.data.NoteDbManager;
+import com.obushko.notesqlite.data.OnDataReceived;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements OnDataReceived {
     private RecyclerView rcView;
     private NoteAdapter noteAdapter;
     private NoteDbManager noteDbManager;
@@ -46,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                noteAdapter.updateAdapter(noteDbManager.getFromDb(newText));
-               // Log.d("NoteLog", "Query. " + newText);
+                readFromDb(newText);
                 return false;
             }
         });
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         noteDbManager.openDb();
-        noteAdapter.updateAdapter(noteDbManager.getFromDb(""));
+        readFromDb("");
     }
 
     @Override
@@ -106,5 +110,26 @@ public class MainActivity extends AppCompatActivity {
                  noteAdapter.removeItem(viewHolder.getAdapterPosition(), noteDbManager );
             }
         });
+    }
+
+    private void readFromDb(String text){
+        AppExecuter.getInstance().getSubIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                noteDbManager.getFromDb(text, MainActivity.this);
+            }
+        });
+    }
+
+    @Override
+    public void onReceived(List<NotesListItem> list) {
+
+        AppExecuter.getInstance().getMainIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                noteAdapter.updateAdapter(list);
+            }
+        });
+
     }
 }

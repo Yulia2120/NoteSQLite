@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.obushko.notesqlite.R;
 import com.obushko.notesqlite.adapter.NotesListItem;
+import com.obushko.notesqlite.data.AppExecuter;
 import com.obushko.notesqlite.data.NoteDbConstants;
 import com.obushko.notesqlite.data.NoteDbManager;
 
@@ -80,7 +81,12 @@ public class EditActivity extends AppCompatActivity {
                     Toast.makeText(EditActivity.this, "Title or Description is Empty!", Toast.LENGTH_SHORT).show();
                 } else {
                     if(isEditState) {
-                        noteDbManager.insertToDb(title, description, tempUri);
+                        AppExecuter.getInstance().getSubIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                noteDbManager.insertToDb(title, description, tempUri);
+                            }
+                        });
                         Toast.makeText(EditActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
                     }else {
                         noteDbManager.updateToDb(title, description, tempUri, item.getId());

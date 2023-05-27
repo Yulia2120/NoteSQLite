@@ -46,14 +46,13 @@ public class NoteDbManager {
         db.delete(NoteDbConstants.TABLE_NAME, selection, null);
     }
 
-    public List<NotesListItem> getFromDb(String searchText){
+    public void getFromDb(String searchText, OnDataReceived onDataReceived){
         List<NotesListItem> tempList = new ArrayList<>();
         String selection = NoteDbConstants.COLUMN_NAME_TITLE + " like ?";
         Cursor cursor = db.query(NoteDbConstants.TABLE_NAME, null, selection,
                 new String[]{"%" + searchText + "%"}, null, null, null);
 
         while (cursor.moveToNext()){
-
             NotesListItem item = new NotesListItem();
 
             String title = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_TITLE));
@@ -69,7 +68,8 @@ public class NoteDbManager {
 
         }
         cursor.close();
-        return tempList;
+        onDataReceived.onReceived(tempList);
+
     }
     public void closeDb(){
         noteDbHelper.close();
