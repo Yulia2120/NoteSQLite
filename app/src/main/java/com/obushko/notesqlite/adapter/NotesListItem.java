@@ -2,10 +2,10 @@ package com.obushko.notesqlite.adapter;
 
 import java.io.Serializable;
 
-public class ListItem implements Serializable {
+public class NotesListItem implements Serializable {
     private String title;
     private String description;
-    private String uri;
+    private String uri = "empty";
     private int id = 0;
 
     public String getTitle() {

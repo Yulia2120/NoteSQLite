@@ -3,9 +3,9 @@ package com.obushko.notesqlite.activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.obushko.notesqlite.R;
-import com.obushko.notesqlite.adapter.ListItem;
+import com.obushko.notesqlite.adapter.NotesListItem;
 import com.obushko.notesqlite.data.NoteDbConstants;
 import com.obushko.notesqlite.data.NoteDbManager;
 
@@ -31,6 +31,7 @@ public class EditActivity extends AppCompatActivity {
     private NoteDbManager noteDbManager;
     private String tempUri = "empty";
     private boolean isEditState = true;
+    private  NotesListItem item;
 
     private FloatingActionButton floatingActionButton;
 
@@ -52,6 +53,7 @@ public class EditActivity extends AppCompatActivity {
 
             tempUri = data.getData().toString();
             imageView.setImageURI(data.getData());
+            getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
     }
 
@@ -77,10 +79,15 @@ public class EditActivity extends AppCompatActivity {
                         || description.equals("")) {
                     Toast.makeText(EditActivity.this, "Title or Description is Empty!", Toast.LENGTH_SHORT).show();
                 } else {
-                    noteDbManager.insertToDb(title, description, tempUri);
-                    Toast.makeText(EditActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if(isEditState) {
+                        noteDbManager.insertToDb(title, description, tempUri);
+                        Toast.makeText(EditActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        noteDbManager.updateToDb(title, description, tempUri, item.getId());
+                        Toast.makeText(EditActivity.this, "Saved!", Toast.LENGTH_SHORT).show();
+                    }
                     noteDbManager.closeDb();
+                    finish();
                 }
             }
         });
@@ -106,7 +113,7 @@ public class EditActivity extends AppCompatActivity {
         imEditImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent chooser = new Intent(Intent.ACTION_PICK);
+                Intent chooser = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 chooser.setType("image/*");
                 startActivityForResult(chooser, PICK_IMAGE_CODE);
             }
@@ -118,12 +125,19 @@ public class EditActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null){
-            ListItem item = (ListItem)intent.getSerializableExtra(NoteDbConstants.LIST_ITEM_INTENT);
+            item = (NotesListItem)intent.getSerializableExtra(NoteDbConstants.LIST_ITEM_INTENT);
             isEditState = intent.getBooleanExtra(NoteDbConstants.EDIT_STATE, true);
 
             if(!isEditState){
                 editTextTitle.setText(item.getTitle());
                 editTextDescription.setText(item.getDescription());
+                if(!item.getUri().equals("empty")){
+                    tempUri = item.getUri();
+                    imageContainer.setVisibility(View.VISIBLE);
+                    imageView.setImageURI(Uri.parse(item.getUri()));
+                    imEditImage.setVisibility(View.GONE);
+                    imDeleteImage.setVisibility(View.GONE);
+                }
             }
         }
     }

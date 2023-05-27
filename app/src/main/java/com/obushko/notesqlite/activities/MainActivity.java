@@ -8,18 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.obushko.notesqlite.R;
-import com.obushko.notesqlite.adapter.ListItem;
 import com.obushko.notesqlite.adapter.NoteAdapter;
-import com.obushko.notesqlite.data.NoteDbConstants;
 import com.obushko.notesqlite.data.NoteDbManager;
 
 public class MainActivity extends AppCompatActivity {

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.obushko.notesqlite.adapter.ListItem;
+import com.obushko.notesqlite.adapter.NotesListItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +30,31 @@ public class NoteDbManager {
         contentValues.put(NoteDbConstants.COLUMN_NAME_URI, uri);
         db.insert(NoteDbConstants.TABLE_NAME, null, contentValues);
     }
+
+    public void updateToDb(String title, String description, String uri, int id){
+        String selection = NoteDbConstants._ID + "=" + id;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NoteDbConstants.COLUMN_NAME_TITLE, title);
+        contentValues.put(NoteDbConstants.COLUMN_NAME_DESCRIPTION, description);
+        contentValues.put(NoteDbConstants.COLUMN_NAME_URI, uri);
+
+        db.update(NoteDbConstants.TABLE_NAME, contentValues, selection, null);
+    }
+
     public void deleteFromDb(int id){
         String selection = NoteDbConstants._ID + "=" + id;
         db.delete(NoteDbConstants.TABLE_NAME, selection, null);
     }
-    public List<ListItem> getFromDb(String searchText){
-        List<ListItem> tempList = new ArrayList<>();
+
+    public List<NotesListItem> getFromDb(String searchText){
+        List<NotesListItem> tempList = new ArrayList<>();
         String selection = NoteDbConstants.COLUMN_NAME_TITLE + " like ?";
         Cursor cursor = db.query(NoteDbConstants.TABLE_NAME, null, selection,
                 new String[]{"%" + searchText + "%"}, null, null, null);
 
         while (cursor.moveToNext()){
 
-            ListItem item = new ListItem();
+            NotesListItem item = new NotesListItem();
 
             String title = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_TITLE));
             String desc = cursor.getString(cursor.getColumnIndexOrThrow(NoteDbConstants.COLUMN_NAME_DESCRIPTION));

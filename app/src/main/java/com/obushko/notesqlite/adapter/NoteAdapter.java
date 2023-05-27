@@ -2,7 +2,6 @@ package com.obushko.notesqlite.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private Context context;
-    private List<ListItem> mainArray;
+    private List<NotesListItem> mainArray;
 
     public NoteAdapter(Context context) {
         this.context = context;
@@ -48,8 +47,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     static class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private final TextView tvTitle;
         private final Context context;
-        private List<ListItem> mainArray;
-        public NoteViewHolder(@NonNull View itemView, Context context, List<ListItem> mainArray) {
+        private List<NotesListItem> mainArray;
+        public NoteViewHolder(@NonNull View itemView, Context context, List<NotesListItem> mainArray) {
             super(itemView);
             this.context = context;
             this.mainArray = mainArray;
@@ -69,7 +68,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             context.startActivity(intent);
         }
     }
-    public void updateAdapter(List<ListItem> newList){
+    public void updateAdapter(List<NotesListItem> newList){
         mainArray.clear();
         mainArray.addAll(newList);
         notifyDataSetChanged();
